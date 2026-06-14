@@ -1,4 +1,6 @@
+import { useQueryClient } from "@tanstack/react-query";
 import {
+  Alert,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
@@ -13,6 +15,7 @@ import { Header } from "../components/Header";
 import { Input } from "../components/Input";
 import { Separator } from "../components/Separator";
 import { UserAvatar } from "../components/UserAvatar";
+import { db } from "../db";
 import { useUserInfo } from "../hooks/useUserInfo";
 import { useTypedNavigation } from "./navigation";
 
@@ -27,10 +30,24 @@ export const ProfileScreen = () => {
   const userInfo = useUserInfo();
   const navigation = useTypedNavigation();
 
+  const queryClient = useQueryClient();
+
   const handleLogout = () => {
     if (userInfo.logout) {
       userInfo.logout();
     }
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Onboarding" }],
+    });
+  };
+
+  const handleClearCache = async () => {
+    await db.execAsync("DELETE FROM products");
+    await db.execAsync("DROP TABLE IF EXISTS products");
+    queryClient.invalidateQueries({ queryKey: ["products"] });
+
+    Alert.alert("Cache cleared successfully");
     navigation.reset({
       index: 0,
       routes: [{ name: "Onboarding" }],
@@ -89,6 +106,14 @@ export const ProfileScreen = () => {
           ))}
         </View>
         <Separator height={20} />
+        {__DEV__ && (
+          <Button
+            title="Clear cache"
+            onPress={handleClearCache}
+            variant="outline"
+          />
+        )}
+        <Separator height={10} />
         <Button title="Logout" onPress={handleLogout} variant="secondary" />
         <Separator height={20} />
       </ScrollView>

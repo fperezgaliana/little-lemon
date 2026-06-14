@@ -9,6 +9,12 @@ export const colors = {
   secondary4: "#333333",
 };
 
+export const fonts = {
+  leadingTitle: "MarkaziText_500Medium",
+  title: "Karla_700Bold",
+  text: "Karla_400Regular",
+};
+
 export const sharedStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -17,13 +23,13 @@ export const sharedStyles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    fontFamily: "MarkaziText_500Medium",
+    fontFamily: fonts.leadingTitle,
     fontSize: 32,
     fontWeight: "500",
     color: colors.secondary4,
   },
   subtitle: {
-    fontFamily: "Karla_700Bold",
+    fontFamily: fonts.title,
     fontSize: 24,
     fontWeight: "700",
     color: colors.secondary4,
@@ -37,7 +43,7 @@ export const sharedStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     padding: 10,
-    fontFamily: "Karla_400Regular",
+    fontFamily: fonts.text,
   },
   button: {
     padding: 10,
@@ -56,14 +62,14 @@ export const sharedStyles = StyleSheet.create({
     filter: "brightness(0.9)",
   },
   sectionTitle: {
-    fontFamily: "Karla_700Bold",
+    fontFamily: fonts.title,
     fontSize: 18,
     fontWeight: "700",
     color: colors.secondary4,
     marginBottom: 8,
   },
   label: {
-    fontFamily: "Karla_400Regular",
+    fontFamily: fonts.text,
     fontSize: 14,
     color: colors.secondary4,
     marginBottom: 4,

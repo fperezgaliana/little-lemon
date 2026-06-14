@@ -1,38 +1,35 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputProps,
+  View,
+} from "react-native";
 import { sharedStyles } from "../common/sharedStyles";
 
 type InputProps = {
-  label: string;
-  placeholder?: string;
-  value: string | undefined;
-  onChangeText: (text: string) => void;
-};
+  label?: string;
+} & TextInputProps;
 
-export const Input = ({
-  label,
-  placeholder,
-  value,
-  onChangeText,
-}: InputProps) => {
+export const Input = ({ label, style, ...props }: InputProps) => {
   return (
-    <View style={styles.inputContainer}>
-      <Text style={sharedStyles.label}>{label}</Text>
+    <View style={styles.container}>
+      {label && <Text style={sharedStyles.label}>{label}</Text>}
       <TextInput
         style={{
           ...sharedStyles.input,
           width: "100%",
           margin: 0,
+          ...styles,
         }}
-        placeholder={placeholder}
-        value={value}
-        onChangeText={onChangeText}
+        {...props}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
+  container: {
     width: "100%",
   },
 });
