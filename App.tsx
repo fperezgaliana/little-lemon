@@ -9,7 +9,7 @@ import {
 } from "@expo-google-fonts/markazi-text";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { loadUserInfo, useUserInfo } from "./hooks/useUserInfo";
@@ -19,13 +19,26 @@ import { OnboardingScreen } from "./screens/OnboardingScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
 import { SplashScreen } from "./screens/SplashScreen";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { initDb } from "./db";
+
+const queryClient = new QueryClient();
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppInner = () => {
+  const [ready, setReady] = useState(false);
+
   useEffect(() => {
+    async function bootstrap() {
+      await initDb();
+      setReady(true);
+    }
     async function fetchUserInfo() {
       await loadUserInfo();
     }
+
+    bootstrap();
     fetchUserInfo();
   }, []);
 
@@ -39,7 +52,7 @@ const AppInner = () => {
 
   const isOnboardingComplete = userInfo.firstName && userInfo.email;
 
-  return userInfo.loadingData || !fontsLoaded ? (
+  return userInfo.loadingData || !fontsLoaded || !ready ? (
     <SplashScreen />
   ) : (
     <Stack.Navigator
@@ -57,7 +70,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <SafeAreaProvider>
-        <AppInner />
+        <QueryClientProvider client={queryClient}>
+          <AppInner />
+        </QueryClientProvider>
       </SafeAreaProvider>
     </NavigationContainer>
   );

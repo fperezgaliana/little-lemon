@@ -1,4 +1,4 @@
-import { Pressable, Text } from "react-native";
+import { Pressable, StyleProp, Text, ViewStyle } from "react-native";
 import { colors, sharedStyles } from "../common/sharedStyles";
 
 type Variant = "primary" | "secondary" | "outline";
@@ -36,16 +36,20 @@ const variants = {
 
 type ButtonProps = {
   title: string;
+  style?: StyleProp<ViewStyle>;
   onPress: () => void;
   disabled?: boolean;
   variant?: Variant;
+  lighten?: boolean;
 };
 
 export const Button = ({
   title,
+  style,
   onPress,
   disabled = false,
   variant = "primary",
+  lighten = false,
 }: ButtonProps) => {
   return (
     <Pressable
@@ -56,6 +60,8 @@ export const Button = ({
         variants[variant].container,
         disabled && sharedStyles.buttonDisabled,
         pressed && !disabled && sharedStyles.buttonPressed,
+        lighten && { filter: "brightness(1.75)" },
+        style && { ...style },
       ]}
     >
       <Text style={[variants[variant].text]}>{title}</Text>
