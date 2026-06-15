@@ -79,18 +79,15 @@ export const ProfileScreen = () => {
       userImage,
       emailNotifications,
     });
+
+    setTouched(false);
   };
 
   const handleSaveChanges = async () => {
     try {
-      await patchUserInfo?.({
-        firstName: userData.firstName,
-        surname: userData.surname,
-        email: userData.email,
-        phone: userData.phone,
-        userImage: userData.userImage,
-        emailNotifications: userData.emailNotifications,
-      });
+      await patchUserInfo?.(userData);
+
+      setTouched(false);
 
       Alert.alert("Success", "Your data has been updated successfully!");
     } catch (error) {
@@ -243,11 +240,13 @@ export const ProfileScreen = () => {
           disabled={!touched}
           onPress={handleCancel}
           variant="outline"
+          style={{ flex: 1 }}
         />
         <Button
           title="Save changes"
           disabled={!touched}
           onPress={handleSaveChanges}
+          style={{ flex: 1 }}
         />
       </View>
     </SafeAreaView>
@@ -284,8 +283,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
+    gap: 10,
     width: "100%",
+    paddingHorizontal: 20,
     paddingVertical: 10,
   },
   horizontalSection: {

@@ -26,7 +26,7 @@ export const UserAvatar = ({
           style={{
             width: size === "small" ? 40 : size === "medium" ? 60 : 80,
             height: size === "small" ? 40 : size === "medium" ? 60 : 80,
-            borderRadius: rounded ? "50%" : 0,
+            borderRadius: rounded ? "50%" : 8,
           }}
         />
       </Pressable>
@@ -40,7 +40,7 @@ export const UserAvatar = ({
             ...styles.avatar,
             width: size === "small" ? 40 : size === "medium" ? 60 : 80,
             height: size === "small" ? 40 : size === "medium" ? 60 : 80,
-            borderRadius: rounded ? "50%" : 0,
+            borderRadius: rounded ? "50%" : 8,
           }}
         >
           <Text

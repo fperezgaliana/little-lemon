@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button } from "./Button";
 import { MenuItem } from "./MenuItem";
+import { Separator } from "./Separator";
 
 type MenuSectionProps = {
   items: Product[];
@@ -62,6 +63,7 @@ export const MenuSection = ({
       </View>
       <FlatList
         data={items}
+        ItemSeparatorComponent={<Separator height={20} displayLine />}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <MenuItem {...item} />}
       />
