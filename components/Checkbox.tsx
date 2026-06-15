@@ -1,5 +1,6 @@
+import { colors } from "@/common/sharedStyles";
 import ExpoCheckbox from "expo-checkbox";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 type CheckboxProps = {
   label: string;
@@ -14,21 +15,22 @@ export const Checkbox = ({
   ...props
 }: CheckboxProps & { key?: string }) => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 8,
-        gap: 6,
-      }}
-      key={props.key}
-    >
+    <View style={styles.container} key={props.key}>
       <ExpoCheckbox
         value={value}
         onValueChange={onValueChange}
-        color={value ? "#4630EB" : undefined}
+        color={colors.primary1}
       />
       <Text style={{ marginRight: 8 }}>{label}</Text>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+    gap: 6,
+  },
+});

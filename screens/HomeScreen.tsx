@@ -15,8 +15,8 @@ export const HomeScreen = () => {
   const [categoriesFilter, setCategoriesFilter] = useState<string[]>();
   const navigation = useTypedNavigation();
   const {
-    productsData: { data: products, isLoading, error },
-    productCategoriesData: {
+    productsQuery: { data: products, isLoading, error },
+    productCategoriesQuery: {
       data: categories,
       isLoading: isCategoriesLoading,
       error: categoriesError,

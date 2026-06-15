@@ -25,7 +25,14 @@ export const Header = ({ onAvatarClick }: HeaderProps) => {
         )}
       </View>
       <Image source={require("../assets/images/Logo.png")} resizeMode="cover" />
-      <UserAvatar rounded size="small" onClick={onAvatarClick} />
+      <UserAvatar
+        userFirstName={userInfo.firstName}
+        userSurname={userInfo.surname}
+        userImage={userInfo.userImage}
+        rounded
+        size="small"
+        onClick={onAvatarClick}
+      />
     </View>
   );
 };
