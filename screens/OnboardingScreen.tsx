@@ -40,7 +40,7 @@ export const OnboardingScreen = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView behavior="padding" style={styles.content}>
           <Text style={sharedStyles.subtitle}>Let us get to know you!</Text>
-          <Separator height={80} displayLine={true} />
+          <Separator height={80} />
           <TextInput
             style={sharedStyles.input}
             placeholder="Your name"

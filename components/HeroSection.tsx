@@ -31,6 +31,7 @@ export const HeroSection = ({ onChangeFilter }: HeroSectionProps) => {
       <TextInput
         value={searchTerm}
         onChangeText={handleSearch}
+        placeholder="Search any dish"
         autoComplete="off"
         autoCorrect={false}
         spellCheck={false}

@@ -7,7 +7,8 @@
     "icon": "./assets/images/app-icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.feliprr.LittleLemonApp"
     },
     "android": {
       "adaptiveIcon": {
@@ -16,14 +17,17 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.feliprr.LittleLemonApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-font",
-      "expo-sqlite"
-    ]
+    "plugins": ["expo-font", "expo-sqlite"],
+    "extra": {
+      "eas": {
+        "projectId": "5eac4cae-0b71-444b-ad8f-bc4736394d7b"
+      }
+    }
   }
 }

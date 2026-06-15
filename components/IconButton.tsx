@@ -1,4 +1,4 @@
-import IonIcons from "@expo/vector-icons/Ionicons";
+import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { Pressable } from "react-native";
 import { colors, sharedStyles } from "../common/sharedStyles";
 
@@ -27,17 +27,17 @@ const variants = {
   outline: {
     container: {
       borderWidth: 1,
-      borderColor: "#2563eb",
+      borderColor: colors.primary1,
       backgroundColor: "transparent",
     },
     text: {
-      color: "#2563eb",
+      color: colors.primary1,
     },
   },
 };
 
 type IconButtonProps = {
-  iconName: React.ComponentProps<typeof IonIcons>["name"];
+  iconName: React.ComponentProps<typeof Ionicons>["name"];
   onPress: () => void;
   rounded?: boolean;
   disabled?: boolean;
@@ -71,7 +71,7 @@ export const IconButton = ({
         pressed && !disabled && sharedStyles.buttonPressed,
       ]}
     >
-      <IonIcons
+      <Ionicons
         name={iconName}
         size={iconSizes[size]}
         color={variants[variant].text.color}
