@@ -1,25 +1,28 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../common/sharedStyles";
-import { useUserInfo } from "../hooks/useUserInfo";
 
 type UserAvatarProps = {
+  userFirstName: string | undefined;
+  userSurname: string | undefined;
+  userImage: string | undefined;
   onClick?: () => void;
   size?: "small" | "medium" | "large";
   rounded?: boolean;
 };
 
 export const UserAvatar = ({
+  userFirstName,
+  userSurname,
+  userImage,
   onClick,
   size = "medium",
   rounded = false,
 }: UserAvatarProps) => {
-  const userInfo = useUserInfo();
-
-  if (userInfo.userImage) {
+  if (userImage) {
     return (
       <Pressable onPress={onClick}>
         <Image
-          source={{ uri: userInfo.userImage }}
+          source={{ uri: userImage }}
           style={{
             width: size === "small" ? 40 : size === "medium" ? 60 : 80,
             height: size === "small" ? 40 : size === "medium" ? 60 : 80,
@@ -29,7 +32,7 @@ export const UserAvatar = ({
       </Pressable>
     );
   } else {
-    const initials = `${userInfo.firstName?.[0] || ""}${userInfo.surname?.[0] || ""}`;
+    const initials = `${userFirstName?.[0] || ""}${userSurname?.[0] || ""}`;
     return (
       <Pressable onPress={onClick}>
         <View

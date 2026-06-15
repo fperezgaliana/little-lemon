@@ -1,4 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
+import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -8,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { sharedStyles } from "../common/sharedStyles";
+import { colors, sharedStyles } from "../common/sharedStyles";
 import { Button } from "../components/Button";
 import { Checkbox } from "../components/Checkbox";
 import { Header } from "../components/Header";
@@ -19,7 +21,7 @@ import { db } from "../db";
 import { useUserInfo } from "../hooks/useUserInfo";
 import { useTypedNavigation } from "./navigation";
 
-const emailNotifications = [
+const emailNotificationsOptions = [
   { id: "order_statuses", label: "Order statuses" },
   { id: "password_changes", label: "Password changes" },
   { id: "special_offers", label: "Special offers" },
@@ -27,19 +29,99 @@ const emailNotifications = [
 ];
 
 export const ProfileScreen = () => {
-  const userInfo = useUserInfo();
+  const {
+    firstName,
+    surname,
+    email,
+    emailNotifications,
+    phone,
+    userImage,
+    logout,
+    patchUserInfo,
+  } = useUserInfo();
   const navigation = useTypedNavigation();
+
+  const [userData, setUserData] = useState({
+    firstName,
+    surname,
+    email,
+    phone,
+    userImage,
+    emailNotifications, // will contain values separated by commas: f.i. order_statuses,password_changes and so on
+  });
+  const [touched, setTouched] = useState(false);
 
   const queryClient = useQueryClient();
 
+  const patchUserData = (updatedData: Partial<typeof userData>) => {
+    const mergedData = { ...userData, ...updatedData };
+    setUserData(mergedData);
+    setTouched(true);
+  };
+
   const handleLogout = () => {
-    if (userInfo.logout) {
-      userInfo.logout();
+    if (logout) {
+      logout();
     }
+
     navigation.reset({
       index: 0,
       routes: [{ name: "Onboarding" }],
     });
+  };
+
+  const handleCancel = () => {
+    setUserData({
+      firstName,
+      surname,
+      email,
+      phone,
+      userImage,
+      emailNotifications,
+    });
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      await patchUserInfo?.({
+        firstName: userData.firstName,
+        surname: userData.surname,
+        email: userData.email,
+        phone: userData.phone,
+        userImage: userData.userImage,
+        emailNotifications: userData.emailNotifications,
+      });
+
+      Alert.alert("Success", "Your data has been updated successfully!");
+    } catch (error) {
+      console.error("Error updating user data:", error);
+      Alert.alert("Error", "Failed to update user data");
+    }
+  };
+
+  const handleImageChange = async () => {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert(
+        "Permission required",
+        "Permission to access the media library is required.",
+      );
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsMultipleSelection: false,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      patchUserData({ userImage: result.assets[0].uri });
+    }
   };
 
   const handleClearCache = async () => {
@@ -61,47 +143,85 @@ export const ProfileScreen = () => {
         <Text style={sharedStyles.sectionTitle}>Personal information</Text>
         <Text style={sharedStyles.label}>Avatar</Text>
         <View style={styles.horizontalSection}>
-          <UserAvatar size="large" />
-          <Button title="Change" onPress={() => console.log("Change avatar")} />
+          <UserAvatar
+            userFirstName={userData.firstName}
+            userSurname={userData.surname}
+            userImage={userData.userImage}
+            size="large"
+          />
+          <Button title="Change" onPress={handleImageChange} />
           <Button
             title="Remove"
-            onPress={() => console.log("Remove avatar")}
+            disabled={!userData.userImage}
+            onPress={() => {
+              patchUserData({ userImage: undefined });
+            }}
             variant="outline"
           />
         </View>
         <KeyboardAvoidingView style={styles.formSection} behavior="padding">
           <Input
             label="First Name"
-            value={userInfo.firstName}
-            onChangeText={() => {}}
+            value={userData.firstName}
+            onChangeText={(value) =>
+              patchUserData({
+                firstName: value,
+              })
+            }
           />
           <Input
             label="Surname"
-            value={userInfo.surname}
-            onChangeText={() => {}}
+            value={userData.surname}
+            onChangeText={(value) =>
+              patchUserData({
+                surname: value,
+              })
+            }
           />
           <Input
             label="Email"
-            value={userInfo.email}
-            onChangeText={() => {}}
+            value={userData.email}
+            onChangeText={(value) =>
+              patchUserData({
+                email: value,
+              })
+            }
             placeholder="Enter your email"
           />
           <Input
             label="Phone number"
-            value={userInfo.phone}
-            onChangeText={() => {}}
+            value={userData.phone}
+            onChangeText={(value) =>
+              patchUserData({
+                phone: value,
+              })
+            }
             placeholder="Enter your phone number"
           />
         </KeyboardAvoidingView>
         <Separator height={20} />
         <Text style={sharedStyles.sectionTitle}>E-mail notifications</Text>
         <View style={styles.formSection}>
-          {emailNotifications.map((notification) => (
+          {emailNotificationsOptions.map((notification) => (
             <Checkbox
               key={notification.id}
               label={notification.label}
-              value={false}
-              onValueChange={() => {}}
+              value={!!userData.emailNotifications?.includes(notification.id)}
+              onValueChange={(value) => {
+                const selectedNotifications =
+                  userData.emailNotifications?.split(",") || [];
+                if (value) {
+                  selectedNotifications.push(notification.id);
+                } else {
+                  const index = selectedNotifications.indexOf(notification.id);
+                  if (index > -1) {
+                    selectedNotifications.splice(index, 1);
+                  }
+                }
+                patchUserData({
+                  emailNotifications: selectedNotifications.join(","),
+                });
+              }}
             />
           ))}
         </View>
@@ -120,12 +240,14 @@ export const ProfileScreen = () => {
       <View style={styles.bottomBar}>
         <Button
           title="Discard changes"
-          onPress={() => console.log("Discard changes")}
+          disabled={!touched}
+          onPress={handleCancel}
           variant="outline"
         />
         <Button
           title="Save changes"
-          onPress={() => console.log("Save changes")}
+          disabled={!touched}
+          onPress={handleSaveChanges}
         />
       </View>
     </SafeAreaView>
@@ -146,7 +268,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    backgroundColor: "#eeeeee",
+    backgroundColor: colors.secondary3,
     alignItems: "center",
     justifyContent: "center",
   },

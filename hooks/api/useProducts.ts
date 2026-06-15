@@ -45,11 +45,11 @@ export const useProducts = ({
   categoriesFilter,
 }: ProductFilters) => {
   return {
-    productsData: useQuery({
+    productsQuery: useQuery({
       queryKey: ["products", textFilter, categoriesFilter],
       queryFn: () => loadProducts({ textFilter, categoriesFilter }),
     }),
-    productCategoriesData: useQuery({
+    productCategoriesQuery: useQuery({
       queryKey: ["productCategories"],
       queryFn: getProductCategoriesFromDb,
     }),
