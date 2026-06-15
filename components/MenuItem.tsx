@@ -36,7 +36,6 @@ export const MenuItem = ({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginBottom: 10,
     flexDirection: "row",
     alignItems: "center",
   },

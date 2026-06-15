@@ -1,6 +1,6 @@
 import IonIcons from "@expo/vector-icons/Ionicons";
 import { Pressable } from "react-native";
-import { sharedStyles } from "../common/sharedStyles";
+import { colors, sharedStyles } from "../common/sharedStyles";
 
 type Variant = "primary" | "secondary" | "outline";
 type Size = "small" | "medium" | "large";
@@ -8,19 +8,19 @@ type Size = "small" | "medium" | "large";
 const variants = {
   primary: {
     container: {
-      backgroundColor: "#2563eb",
+      backgroundColor: colors.primary1,
     },
     text: {
-      color: "white",
+      color: colors.secondary3,
     },
   },
 
   secondary: {
     container: {
-      backgroundColor: "#e5e7eb",
+      backgroundColor: colors.primary2,
     },
     text: {
-      color: "#111827",
+      color: colors.secondary4,
     },
   },
 

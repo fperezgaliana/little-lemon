@@ -1,3 +1,4 @@
+import { useRoute } from "@react-navigation/native";
 import { Image, StyleSheet, View } from "react-native";
 import { useUserInfo } from "../hooks/useUserInfo";
 import { useTypedNavigation } from "../screens/navigation";
@@ -11,11 +12,14 @@ type HeaderProps = {
 export const Header = ({ onAvatarClick }: HeaderProps) => {
   const userInfo = useUserInfo();
   const navigation = useTypedNavigation();
+  const route = useRoute();
+
+  const showBack = route.name !== "Home";
 
   return (
     <View style={styles.header}>
       <View>
-        {navigation.canGoBack() && (
+        {showBack && (
           <IconButton
             iconName="arrow-back"
             onPress={() => navigation.goBack()}
